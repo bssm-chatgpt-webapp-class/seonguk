@@ -1,0 +1,12 @@
+.chatItem {
+  display: flex;
+}
+
+.question-profile {
+  width: 30px;
+  height: 30px;
+}
+
+.chatItem > pre {
+  white-space: pre-wrap;
+}

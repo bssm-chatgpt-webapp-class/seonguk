@@ -1,0 +1,5 @@
+.main {
+  height: calc(100vh - 30px - 100px);
+  margin-bottom: 100px;
+  overflow-y: scroll;
+}
