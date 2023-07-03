@@ -1,9 +1,10 @@
 const express = require("express");
+const router = require("./routers");
 const app = express();
 
-const dataBase = ["할1"];
-app.get("/", function (req, res) {
-  res.json(dataBase);
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/api", router);
 
 app.listen(4000);
