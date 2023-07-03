@@ -6,7 +6,7 @@ const Main = ({ question }) => {
   return (
     <div className="main">
       <ChatItem imageLink={profileImageLink} text={question} />
-      <ChatItem imageLink="/images/chatgpt.png" text={ChatgptRespose} />
+      <ChatItem imageLink="/images/chatgpt.png" text="" />
     </div>
   );
 };
