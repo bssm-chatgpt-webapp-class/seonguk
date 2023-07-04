@@ -10,5 +10,7 @@ INSERT INTO todo(todo, completed) VALUES('todo1', true);
 CREATE TABLE user (
 id INT PRIMARY KEY auto_increment,
 email varchar(255) not null,
+
+
 pw varchar(255) not null
 );
