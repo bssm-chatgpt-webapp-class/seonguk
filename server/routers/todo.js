@@ -1,22 +1,27 @@
 const express = require("express");
 const router = express.Router();
 const { getConnection } = require("../models/connector");
+const jwt = require("jsonwebtoken");
+const { validateToken } = require("../meddlewares/auth");
+const { hasAuth } = require("../meddlewares/todo");
 
 router.get("/", async (req, res) => {
   const [results] = await getConnection().execute(`SELECT * FROM todo`);
   res.json(results);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validateToken, async (req, res) => {
   const data = req.body;
+
   await getConnection().execute(
-    `INSERT INTO todo (todo, completed) VALUES (?,?)`,
-    [data.todo, data.completed]
+    `INSERT INTO todo (todo, completed, user_id) VALUES (?,?,?)`,
+    [data.todo, 0, tokenResuit.id]
   );
+
   return res.json("success");
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", validateToken, hasAuth, async (req, res) => {
   const id = req.params.id;
   const { todo, completed } = req.body;
   await getConnection().execute(
@@ -26,7 +31,7 @@ router.put("/:id", async (req, res) => {
   return res.json("success");
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", validateToken, hasAuth, async (req, res) => {
   const id = req.params.id;
   await getConnection().execute(`DELETE FROM todo WHERE id =?`, [id]);
   return res.json("success");
