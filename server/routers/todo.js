@@ -1,36 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const connection = require("../models/connector");
+const { getConnection } = require("../models/connector");
 
-const dataBase = [{ id: 1, text: "할1" }];
-let currentid = 1;
-
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
-
-router.get("/", async function (req, res) {
-  const results = await (await connection).query(`SELECT * FROM todo`);
+router.get("/", async (req, res) => {
+  const [results] = await getConnection().execute(`SELECT * FROM todo`);
   res.json(results);
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const data = req.body;
-  console.log("data : ", data);
-  dataBase.push({ id: ++currentid, text: data.text });
-  return res.json("성공");
+  await getConnection().execute(
+    `INSERT INTO todo (todo, completed) VALUES (?,?)`,
+    [data.todo, data.completed]
+  );
+  return res.json("success");
 });
 
-router.delete("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   const id = req.params.id;
-  dataBase = dataBase.filter((data) => data.id !== Number(id));
-  return res.json("성공");
+  const { todo, completed } = req.body;
+  await getConnection().execute(
+    `UPDATE todo SET todo =?, completed =? WHERE id =?`,
+    [todo, completed, id]
+  );
+  return res.json("success");
 });
 
-router.put("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const id = req.params.id;
-  const updataIndex = dataBase.findIndex((data) => data.id === Num(id));
-  dataBase[updataIndex].text = req.body.text;
-  return res.json("성공");
+  await getConnection().execute(`DELETE FROM todo WHERE id =?`, [id]);
+  return res.json("success");
 });
 
 module.exports = router;
