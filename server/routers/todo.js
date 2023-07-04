@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const connection = require("../models/connector");
 
 const dataBase = [{ id: 1, text: "할1" }];
 let currentid = 1;
@@ -7,8 +8,9 @@ let currentid = 1;
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
-router.get("/", function (req, res) {
-  res.json(dataBase);
+router.get("/", async function (req, res) {
+  const results = await (await connection).query(`SELECT * FROM todo`);
+  res.json(results);
 });
 
 router.post("/", (req, res) => {
